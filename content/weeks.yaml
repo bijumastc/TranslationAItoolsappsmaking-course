@@ -1,0 +1,329 @@
+# Week-by-week course content.
+# Edit freely: every page of the app reads from this file.
+# Levels: starter = new to AI tools, builder = comfortable with apps, pro = codes or learns fast.
+
+phases:
+  - id: 0
+    name: Foundations
+    weeks: "1"
+    summary: MT history, accounts, Professor Twin built live
+  - id: 1
+    name: Prompt craft
+    weeks: "2–3"
+    summary: Skopos, Nida and Venuti as prompt switches
+  - id: 2
+    name: Promptotyping
+    weeks: "4–7"
+    summary: Written briefs become working apps in AI Studio Build mode
+    gate: Showcase 1 (Week 7)
+  - id: 3
+    name: Indic engines
+    weeks: "8–10"
+    summary: Bhashini, Sarvam AI, AIKosh and AI4Bharat IndicTrans2
+  - id: 4
+    name: Evaluation and slop
+    weeks: "11–12"
+    summary: MQM, COMET, back-translation, slop detection, reviewer agent
+    gate: Showcase 2 (Week 12)
+  - id: 5
+    name: Capstone
+    weeks: "13–15"
+    summary: A deployed tool for a real user
+    gate: Demo Day (Week 15)
+
+weeks:
+  - week: 1
+    phase: 0
+    title: From dictionaries to LLMs
+    theory: >
+      A short history of machine translation: rule-based, statistical, neural, and
+      large language models. Why Malayalam is hard for machines: agglutination,
+      script, free word order, code-mixing (Manglish), and Sanskritised vs everyday registers.
+    demo:
+      hook: A badly translated government or railway signboard.
+      live_build: Run one English sentence through Google Translate, Gemini (AI Studio chat) and Sarvam's web playground. Compare.
+      break_it: Try a Malayalam proverb and a kinship term (e.g. അമ്മാവൻ) in all three.
+    prompts: [P1]
+    app: Professor Twin (built live by the teacher)
+    levels:
+      starter: Create your Google account access to AI Studio. Translate one paragraph in chat and note one error.
+      builder: Do the Starter task, then compare three engines on the same paragraph in a small table.
+      pro: Do the Builder task and write 150 words on why each engine might fail differently.
+    deploy: Make accounts. Share one AI Studio chat link with a classmate.
+    twin_tip: Ask the Twin, "What makes Malayalam hard for machine translation?" and check one claim it makes.
+    dh_link: Translation technology as a cultural history.
+
+  - week: 2
+    phase: 1
+    title: The prompt is a translation brief
+    theory: >
+      Skopos theory (Vermeer, Reiss): the purpose of the target text decides how you
+      translate. A prompt is a translation brief: reader, purpose, register, constraints, output.
+    demo:
+      hook: One notice, two very different readers.
+      live_build: Build the five-part prompt (role, reader, purpose, register, format) live.
+      break_it: Remove the reader line and watch the output change.
+    prompts: [P1, P2]
+    app: "#1 Prompt Card Library"
+    levels:
+      starter: Fill in the Starter prompt template for your Text of the Week. Save it to the class Prompt Library.
+      builder: Write three prompt cards for three readers of the same text. Log what changed.
+      pro: Design a shared Google Sheet schema for the Prompt Library (id, purpose, reader, register, prompt, result, notes).
+    deploy: Save and share prompts with a link.
+    twin_tip: "Ask the Twin: 'Which line of my prompt is doing the Skopos work?'"
+    dh_link: Prompts as documented editorial decisions.
+
+  - week: 3
+    phase: 1
+    title: Equivalence and visibility as switches
+    theory: >
+      Nida's formal vs dynamic equivalence and Venuti's domestication vs foreignization,
+      turned into prompt settings. System instructions, temperature and structured (JSON) output.
+    demo:
+      hook: A literary passage translated two ways.
+      live_build: Add a system instruction and request JSON output with translation, register, culture terms, uncertainties.
+      break_it: Raise the temperature and see what drifts.
+    prompts: [P2, P3, P4]
+    app: "#2 Register Switcher"
+    levels:
+      starter: Use P2 on a short text. Mark which version you prefer and why, in 3 lines.
+      builder: Turn P4 into a small AI Studio app with a register drop-down.
+      pro: Make the app return JSON and display culture terms as a separate table.
+    deploy: Share an AI Studio app link.
+    twin_tip: Ask the Twin to explain the difference between domestication and dynamic equivalence with one Malayalam example.
+    dh_link: Visibility of the translator in digital texts.
+
+  - week: 4
+    phase: 2
+    title: First app from a brief
+    theory: >
+      Terminology management and consistency. Why glossaries matter in legal, health and
+      education texts. The app brief as a product document.
+    demo:
+      hook: One English term translated three ways in a single document.
+      live_build: Paste the Glossary Builder brief (P5) into AI Studio Build mode and run it.
+      break_it: Give it a term with no Malayalam equivalent.
+    prompts: [BRIEF, P5]
+    app: "#3 Padakosham (Glossary Builder)"
+    levels:
+      starter: Remix the teacher's Glossary Builder and change the subject list.
+      builder: Write your own brief for a glossary app in a subject of your choice and build it.
+      pro: Add CSV import of existing glossaries and a consistency check across a full text.
+    deploy: Deploy to Cloud Run from AI Studio. Open the URL on a phone.
+    twin_tip: Paste your brief to the Twin and ask which part is too vague.
+    dh_link: Controlled vocabularies and thesauri.
+
+  - week: 5
+    phase: 2
+    title: Manglish and culture-bound words
+    theory: >
+      Transliteration vs translation. Newmark's cultural categories (ecology, material culture,
+      social culture, organisations, gestures). Code-mixing in Kerala's digital life.
+    demo:
+      hook: A Manglish WhatsApp message.
+      live_build: Build a Manglish to Malayalam script converter with a culture-note explainer.
+      break_it: Spelling variants of the same Manglish word.
+    prompts: [BRIEF]
+    app: "#4 Manglish ↔ Malayalam + Culture Note Explainer"
+    levels:
+      starter: Collect 20 Manglish sentences from public posts (no names) as test data.
+      builder: Build the converter app and test it on the class's 20-sentence set.
+      pro: Add a mode that explains every culture-bound word using Newmark's categories.
+    deploy: Connect the app to GitHub (two-way sync).
+    twin_tip: Ask the Twin to classify five Kerala food or festival words into Newmark's categories.
+    dh_link: Social media language as a corpus.
+
+  - week: 6
+    phase: 2
+    title: Subtitles
+    theory: >
+      Audiovisual translation: time and space limits, reading speed, line length, condensation.
+      The .srt format.
+    demo:
+      hook: A clumsy subtitle from a film clip.
+      live_build: Build Subtitle Studio (P6) that keeps timestamps and flags long lines.
+      break_it: A fast dialogue scene with overlapping speech.
+    prompts: [P6]
+    app: "#5 Subtitle Studio"
+    levels:
+      starter: Translate a 10-line .srt file in chat and fix line lengths by hand.
+      builder: Build Subtitle Studio and run a 2-minute college event clip.
+      pro: Add a reading-speed check (characters per second) per subtitle.
+    deploy: Commit, break something, roll back with GitHub.
+    twin_tip: Ask the Twin what reading speed rule it would use and why.
+    dh_link: Audiovisual archives and accessibility.
+
+  - week: 7
+    phase: 2
+    title: Pictures of text
+    theory: >
+      Multimodal translation. Public signage and the linguistic landscape. OCR errors and
+      their effect on translation.
+    demo:
+      hook: Photo of a campus or bus-stand signboard.
+      live_build: Build Snap & Translate (P7) with image upload.
+      break_it: A blurred or handwritten photo.
+    prompts: [P7]
+    app: "#6 Snap & Translate"
+    levels:
+      starter: Photograph 5 campus signs and translate them with the class app.
+      builder: Build the app and add an "uncertain words" list.
+      pro: Add a signage audit mode that records location, original, translation and errors to CSV.
+    deploy: Showcase 1 — every student shows one deployed app.
+    twin_tip: Ask the Twin to help you write a 60-second showcase script.
+    dh_link: Linguistic landscape studies.
+
+  - week: 8
+    phase: 3
+    title: Bhashini and speech
+    theory: >
+      India's language policy and the National Language Translation Mission. Bhashini's
+      ASR → MT → TTS pipeline, ULCA, and free developer APIs. Orality and translation.
+    demo:
+      hook: A spoken Malayalam announcement.
+      live_build: Use the Bhashini web tools, then show the API pipeline idea.
+      break_it: Dialect speech and background noise.
+    prompts: [BRIEF]
+    app: "#7 Voice Bridge"
+    levels:
+      starter: Use Bhashini's web tools to translate 5 spoken sentences. Note errors.
+      builder: Register for Bhashini and build a speech-to-text-to-translation app (keys in secrets).
+      pro: Build the full speech-to-speech pipeline and log latency for each step.
+    deploy: API keys in secrets, never in code.
+    twin_tip: Ask the Twin where your key should live and why a browser must never see it.
+    dh_link: Oral history and speech archives.
+
+  - week: 9
+    phase: 3
+    title: Choosing an engine
+    theory: >
+      Engine choice is a translation decision. Sarvam Mayura's formal, colloquial and code-mixed
+      modes; gender-aware translation; Sarvam-Translate for all 22 scheduled languages.
+    demo:
+      hook: The same sentence through three engines.
+      live_build: Use this app's Engine Comparator page with Gemini and Sarvam.
+      break_it: A code-mixed sentence and a gendered first-person sentence.
+    prompts: [P8]
+    app: "#8 Three-Engine Comparator"
+    levels:
+      starter: Compare two engines on 10 sentences and vote for the better output each time.
+      builder: Build your own comparator in AI Studio with Gemini and Sarvam.
+      pro: Add a third engine (IndicTrans2 or Bhashini) and export votes as CSV.
+    deploy: Environment variables and usage limits.
+    twin_tip: Ask the Twin to design a fair test set of 10 sentences.
+    dh_link: Critical AI studies — whose language data?
+
+  - week: 10
+    phase: 3
+    title: Data, datasets, open models
+    theory: >
+      Corpora, parallel data, alignment and licences. AIKosh as India's dataset and model
+      repository. AI4Bharat's IndicTrans2 open models on Hugging Face.
+    demo:
+      hook: Where does a translation model's knowledge come from?
+      live_build: Tour AIKosh and the IndicTrans2 model card; run an IndicTrans2 demo.
+      break_it: A domain the training data probably lacks (local festival terms).
+    prompts: [BRIEF]
+    app: "#9 Department Parallel Corpus"
+    levels:
+      starter: Add 30 aligned English–Malayalam sentence pairs from public-domain or department texts to the class sheet.
+      builder: Clean and tag the corpus (domain, register, source, licence).
+      pro: Deploy a Hugging Face Space running a distilled IndicTrans2 model.
+    deploy: Hugging Face Space with Gradio.
+    twin_tip: Ask the Twin what licence information each sentence pair needs.
+    dh_link: Building and documenting a corpus.
+
+  - week: 11
+    phase: 4
+    title: Measuring quality
+    theory: >
+      BLEU, chrF, COMET and why pretrained metrics track humans better for Indian languages.
+      MQM error typology: accuracy, fluency, terminology, style, locale; minor, major, critical.
+    demo:
+      hook: Two translations with the same BLEU score but very different quality.
+      live_build: Annotate errors live with MQM; run a back-translation check (P9).
+      break_it: A translation that is fluent but wrong.
+    prompts: [P9]
+    app: "#10 MQM Annotation Tool"
+    levels:
+      starter: Annotate 10 sentences with MQM categories using the class form.
+      builder: Build the MQM annotation tool with CSV export.
+      pro: Compute chrF and COMET in Colab for the class corpus and compare with MQM scores.
+    deploy: Export data as CSV.
+    twin_tip: Ask the Twin to check whether your error label is accuracy or fluency.
+    dh_link: Annotation as interpretation.
+
+  - week: 12
+    phase: 4
+    title: AI slop and the reviewer agent
+    theory: >
+      What translation slop is: fluent-looking output a careful translator would not sign.
+      Why AI-authorship detectors are weak signals, especially for Malayalam. From app to agent:
+      translator, critic, reviser, judge, human gate.
+    demo:
+      hook: A polished-sounding but wrong translation.
+      live_build: Use this app's Slop Detector page, then build your own (P10).
+      break_it: A translation with a dropped negation.
+    prompts: [P10]
+    app: "#11 Translation Slop Detector + #12 Reviewer Agent"
+    levels:
+      starter: Run 5 translations through the Slop Detector and verify each flag by hand.
+      builder: Build your own slop detector app from the P10 brief.
+      pro: Build the reviewer agent loop with a human-gate log.
+    deploy: Showcase 2 and peer testing.
+    twin_tip: Ask the Twin to play the Critic on one of your translations.
+    dh_link: Trust, provenance and disclosure.
+
+  - week: 13
+    phase: 5
+    title: Capstone brief
+    theory: User-centred design. Writing a product brief. Risk and ethics for sensitive users.
+    demo:
+      hook: A tool nobody used, and why.
+      live_build: Teams pitch; the teacher role-plays the user.
+      break_it: The user asks for something the team didn't plan.
+    prompts: [BRIEF]
+    app: Capstone brief
+    levels:
+      starter: Own the test set (30+ sentences with expected translations).
+      builder: Own the brief and the first prototype.
+      pro: Own architecture, engines and deployment plan.
+    deploy: Pick a host; plan the launch.
+    twin_tip: Ask the Twin to find three risks in your brief.
+    dh_link: Translation as public service.
+
+  - week: 14
+    phase: 5
+    title: Build and test with users
+    theory: Testing with real users. Disclosure, privacy and consent.
+    demo:
+      hook: Three-minute stand-up by one team each day.
+      live_build: Teacher fixes one team's bug live.
+      break_it: Real user input the team never expected.
+    prompts: []
+    app: Capstone build
+    levels:
+      starter: Run user tests and record feedback.
+      builder: Iterate the app on feedback; keep a change log.
+      pro: Add evaluation (MQM before/after) and monitoring.
+    deploy: README and About page.
+    twin_tip: Ask the Twin to turn your user feedback into a prioritised fix list.
+    dh_link: Participatory design with communities.
+
+  - week: 15
+    phase: 5
+    title: Demo Day
+    theory: Translation, technology and the public. What changes for the translator.
+    demo:
+      hook: Last year's best portfolio app (from Week 1 onward this becomes a tradition).
+      live_build: Demo Day rehearsals.
+      break_it: Audience questions.
+    prompts: []
+    app: Capstone shipped
+    levels:
+      starter: Present the test set and what it revealed.
+      builder: Live demo of the app.
+      pro: Explain architecture, evaluation and deployment.
+    deploy: Demo Day and the department portfolio page.
+    twin_tip: Ask the Twin to quiz you with five viva questions.
+    dh_link: Archives of student digital work.

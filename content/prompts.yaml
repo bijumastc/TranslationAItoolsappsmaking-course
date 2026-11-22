@@ -1,0 +1,149 @@
+# Prompt bank. Each prompt has an id used in weeks.yaml.
+# "where" tells students which mode to use: chat (AI Studio chat) or build (AI Studio Build mode).
+
+prompts:
+  - id: STARTER
+    title: Fill-in-the-blank translation prompt (Starter template)
+    where: chat
+    concept: Skopos — the brief decides the translation
+    text: |
+      You are a professional English–Malayalam translator.
+      Translate the text below for [READER: who will read it].
+      Purpose: [WHY they will read it].
+      Register: [formal / everyday spoken / literary / legal].
+      Keep these words untranslated: [names, brand terms].
+      If a word is culture-specific, keep it and add a short note in brackets.
+      Output: the translation first, then a list of any choices you were unsure about.
+      Text: [PASTE HERE]
+
+  - id: P1
+    title: The same text, two readers
+    where: chat
+    concept: Skopos theory
+    text: |
+      Translate this Kerala government notice into Malayalam twice.
+      Version A: for a 70-year-old farmer in Wayanad who reads slowly.
+      Version B: for a lawyer filing it in court.
+      After both, list every difference and say which reader caused it.
+      Notice: [PASTE]
+
+  - id: P2
+    title: Domesticate vs foreignize
+    where: chat
+    concept: Venuti
+    text: |
+      Translate this English paragraph into Malayalam two ways.
+      1. Domesticated: a Malayali reader should feel it was written in Kerala.
+      2. Foreignized: keep the foreign names, foods and customs, and add no explanations.
+      Then write 3 lines on what each version gains and loses.
+      Text: [PASTE]
+
+  - id: P3
+    title: The proverb test
+    where: chat
+    concept: Idiom and equivalence
+    text: |
+      Translate the Malayalam proverb "അടി തെറ്റിയാൽ ആനയും വീഴും" into English in three ways:
+      literal, an equivalent English proverb, and a plain-meaning version.
+      Say which one you would use in a children's book, a business email, and a novel.
+
+  - id: P4
+    title: Structured output
+    where: chat
+    concept: From prompt to app
+    text: |
+      Translate the text into Malayalam. Return only JSON with these keys:
+      "translation", "register", "culture_terms" (list of {term, note}),
+      "uncertain" (list of phrases you were unsure about, with reasons).
+      Text: [PASTE]
+
+  - id: BRIEF
+    title: The app brief template (every Build-mode app uses this shape)
+    where: build
+    concept: Promptotyping
+    text: |
+      Build a web app called [NAME].
+      Users: [WHO] who need to [JOB].
+      Input: [WHAT THEY PASTE OR UPLOAD].
+      Output: [WHAT THEY GET], shown [HOW].
+      Use Gemini to [THE AI STEP], following these translation rules: [RULES].
+      Interface: mobile-first, large text, Noto Sans Malayalam font,
+      English and Malayalam labels, a copy button and a download button.
+      Must not: invent terms, hide uncertainty, or store user text.
+      Add an About box explaining that the output is machine-generated.
+
+  - id: P5
+    title: Padakosham — Glossary Builder
+    where: build
+    concept: Terminology consistency
+    text: |
+      Build a web app called "Padakosham" (Glossary Builder).
+      Users: translation students working on a subject text.
+      Input: a pasted English text and a subject (law, health, agriculture, education).
+      Output: a table of key terms with columns: English term, Malayalam equivalent,
+      everyday alternative, part of speech, example sentence, confidence (high/medium/low).
+      Let users edit any cell, mark a term "approved", and download the table as CSV.
+      Never invent a Malayalam term; if none exists, suggest transliteration and mark it low confidence.
+
+  - id: P6
+    title: Subtitle Studio
+    where: build
+    concept: Audiovisual translation
+    text: |
+      Build a web app that translates .srt subtitle files between English and Malayalam.
+      Keep every timestamp unchanged. Keep each line under 42 characters and
+      at most 2 lines per subtitle; if a translation is too long, shorten it and
+      mark the subtitle in orange. Show source and target side by side, let users
+      edit any line, and download a valid .srt file.
+
+  - id: P7
+    title: Snap & Translate
+    where: build
+    concept: Multimodal translation, signage
+    text: |
+      Build a mobile-first app: the user takes or uploads a photo of a signboard,
+      notice or printed page in English or Malayalam. Read the text, show it,
+      translate it to the other language, and explain any abbreviations or
+      culture-specific words. If the photo is unclear, say which words are uncertain.
+
+  - id: P8
+    title: Three-Engine Comparator
+    where: build
+    concept: Engine choice as a translation decision
+    text: |
+      Build an app that sends the same English text to three translators and
+      shows the Malayalam outputs side by side: Gemini, the Sarvam translate API,
+      and a third engine I will add later. Keep API keys in server-side secrets.
+      Let users vote for the best output per sentence and tag errors
+      (meaning, grammar, word choice, style). Save votes and download as CSV.
+
+  - id: P9
+    title: Back-translation check
+    where: chat
+    concept: MQM evaluation
+    text: |
+      Here is an English source and its Malayalam translation.
+      1. Translate the Malayalam back into English without looking at the source.
+      2. Compare the back-translation with the source sentence by sentence.
+      3. List anything added, dropped, or changed in meaning, with severity
+         (minor, major, critical), using MQM categories.
+      Source: [PASTE]  Translation: [PASTE]
+
+  - id: P10
+    title: Translation Slop Detector
+    where: build
+    concept: AI slop, accuracy, evidence
+    text: |
+      Build a web app called "Slop Detector for Translations".
+      Input: an English source text and its Malayalam translation (or the reverse).
+      Steps:
+      1. Split both into aligned sentences and show them side by side.
+      2. Back-translate the target into the source language.
+      3. For each sentence, flag: omission, addition, meaning change, calque,
+         register mismatch, inconsistent term, name/number change.
+         Give each flag a severity (minor, major, critical) and quote the evidence.
+      4. Check names, numbers and dates automatically by comparing both texts.
+      5. Give an overall "publish / revise / retranslate" verdict with reasons.
+      Never give a verdict without quoted evidence. Say clearly that this is
+      a support tool and a human translator makes the final decision.
+      Allow export of the report as CSV.

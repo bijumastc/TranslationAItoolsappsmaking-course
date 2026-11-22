@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Translation in Praxis · English ↔ Malayalam with AI</title>
+<meta name="description" content="A Skill Enhancement Course on English–Malayalam translation with AI tools: prompting, promptotyping, Indic language engines, slop detection and deployment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600&display=swap" rel="stylesheet">
+<script src="assets/js-yaml.min.js"></script>
+<script src="assets/marked.min.js"></script>
+<script src="assets/purify.min.js"></script>
+<style>
+  :root {
+    --teal: #0f766e; --teal-soft: #e6f2f1; --ink: #1f2937; --quiet: #5b6472;
+    --line: #dfe5e4; --bg: #fbfcfc; --card: #ffffff; --warn: #b45309; --bad: #b91c1c; --good: #15803d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Noto Sans", "Noto Sans Malayalam", system-ui, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; }
+  header { background: var(--teal); color: #fff; padding: 18px 24px 0; }
+  header h1 { margin: 0; font-size: 1.5rem; }
+  header p { margin: 2px 0 12px; opacity: .9; font-size: .95rem; }
+  nav { display: flex; flex-wrap: wrap; gap: 2px; }
+  nav a { color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 8px 8px 0 0; font-size: .92rem; opacity: .85; }
+  nav a.active, nav a:hover { background: var(--bg); color: var(--teal); opacity: 1; font-weight: 600; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  h2 { color: var(--teal); margin-top: 0; }
+  h3 { margin-bottom: 6px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 12px 0; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .muted { color: var(--quiet); font-size: .9rem; }
+  .pill { display: inline-block; background: var(--teal-soft); color: var(--teal); padding: 2px 10px; border-radius: 99px; font-size: .82rem; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .92rem; background: var(--card); }
+  th, td { border: 1px solid var(--line); padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: var(--teal-soft); }
+  pre { background: #f4f6f6; border: 1px solid var(--line); border-radius: 8px; padding: 12px; white-space: pre-wrap; font-size: .88rem; position: relative; }
+  button, select, input, textarea { font: inherit; }
+  button { background: var(--teal); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  button.secondary { background: #fff; color: var(--teal); border: 1px solid var(--teal); }
+  button:disabled { opacity: .5; cursor: wait; }
+  .copy { position: absolute; top: 8px; right: 8px; padding: 3px 10px; font-size: .8rem; }
+  textarea, input[type=text], input[type=password], select { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+  textarea { min-height: 140px; }
+  label { font-weight: 600; font-size: .9rem; display: block; margin: 10px 0 4px; }
+  .tabs { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+  .tabs button { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .tabs button.on { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .chat { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+  .msg { padding: 10px 14px; border-radius: 10px; max-width: 85%; }
+  .msg.user { align-self: flex-end; background: var(--teal-soft); }
+  .msg.model { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
+  .sev-critical { color: var(--bad); font-weight: 700; } .sev-major { color: var(--warn); font-weight: 700; } .sev-minor { color: var(--quiet); }
+  .error { color: var(--bad); }
+  .keys { background: #fff7e6; border: 1px solid #f3d9a4; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; }
+  .projector .lesson, .projector .lesson td, .projector .lesson p { font-size: 1.35rem; }
+  footer { text-align: center; color: var(--quiet); font-size: .85rem; padding: 24px; }
+  details summary { cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Translation in Praxis</h1>
+  <p>English ↔ Malayalam translation with AI tools · Skill Enhancement Course · University of Calicut</p>
+  <nav id="nav"></nav>
+</header>
+<main id="app"><p>Loading the course…</p></main>
+<footer>AI output is machine-generated. A human translator always has the final say. · Course content: CC BY 4.0</footer>
+
+<script>
+/* ---------- Data loading: the same content/ files the Streamlit app uses ---------- */
+const S = { weeks: null, phases: null, prompts: null, md: {}, twinHistory: [], votes: [] };
+const PAGES = [
+  ["home", "Home"], ["roadmap", "Roadmap"], ["week", "Weekly Lessons"], ["prompts", "Prompt Bank"],
+  ["twin", "Professor Twin"], ["slop", "Slop Detector"], ["compare", "Engine Comparator"],
+  ["deploy", "Deploy Guide"], ["capstone", "Capstone"], ["resources", "Resources"]
+];
+const LEVELS = { starter: "🌱 Starter", builder: "🛠️ Builder", pro: "🚀 Pro" };
+const MODELS = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-3.5-flash-lite"];
+
+async function load() {
+  const get = async f => { const r = await fetch("content/" + f); if (!r.ok) throw new Error(f + " not found (" + r.status + ")"); return r.text(); };
+  const course = jsyaml.load(await get("weeks.yaml"));
+  S.weeks = course.weeks; S.phases = Object.fromEntries(course.phases.map(p => [p.id, p]));
+  S.prompts = Object.fromEntries(jsyaml.load(await get("prompts.yaml")).prompts.map(p => [p.id, p]));
+  for (const f of ["twin_prompt.md", "deploy_guide.md", "capstone.md", "resources.md"]) S.md[f] = await get(f);
+}
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const md = s => DOMPurify.sanitize(marked.parse(String(s ?? "")));
+const codeBlock = t => `<pre><button class="copy secondary" onclick="copyText(this)">Copy</button><code>${esc(t)}</code></pre>`;
+function copyText(btn) {
+  const t = btn.nextElementSibling.textContent;
+  navigator.clipboard.writeText(t).then(() => { btn.textContent = "Copied"; setTimeout(() => btn.textContent = "Copy", 1500); });
+}
+function download(name, text, type = "text/csv") {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: type + ";charset=utf-8" }));
+  a.download = name; a.click();
+}
+const toCSV = rows => { if (!rows.length) return ""; const k = Object.keys(rows[0]); const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`; return [k.join(","), ...rows.map(r => k.map(x => q(r[x])).join(","))].join("\n"); };
+const table = rows => rows.length ? `<table><tr>${Object.keys(rows[0]).map(k => `<th>${esc(k)}</th>`).join("")}</tr>${rows.map(r => `<tr>${Object.values(r).map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</table>` : "";
+
+/* ---------- Keys: kept in memory; saved on this device only if the student ticks the box ---------- */
+const store = { get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+                set(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch {} } };
+const KEYS = { gemini: store.get("tip_gemini"), sarvam: store.get("tip_sarvam"), model: store.get("tip_model") || MODELS[0] };
+function keyPanel(needSarvam = false) {
+  return `<div class="keys"><strong>🔑 Your API key</strong> <span class="muted">— stays in your browser and goes only to Google${needSarvam ? " / Sarvam" : ""}. Never share it or put it in GitHub.</span>
+  <div class="grid2"><div><label>Gemini API key <span class="muted">(free at aistudio.google.com → Get API key)</span></label>
+  <input type="password" id="kGemini" value="${esc(KEYS.gemini)}" oninput="KEYS.gemini=this.value;saveKeys()"></div>
+  <div><label>Model</label><select id="kModel" onchange="KEYS.model=this.value;saveKeys()">${MODELS.map(m => `<option ${m === KEYS.model ? "selected" : ""}>${m}</option>`).join("")}</select></div>
+  ${needSarvam ? `<div><label>Sarvam API key <span class="muted">(dashboard.sarvam.ai, free trial)</span></label><input type="password" id="kSarvam" value="${esc(KEYS.sarvam)}" oninput="KEYS.sarvam=this.value;saveKeys()"></div>` : ""}</div>
+  <label style="font-weight:400"><input type="checkbox" id="kRemember" ${store.get("tip_remember") ? "checked" : ""} onchange="saveKeys()"> Remember on this device (only on your own phone or laptop, never on a lab computer)</label></div>`;
+}
+function saveKeys() {
+  const rem = $("#kRemember")?.checked;
+  store.set("tip_remember", rem ? "1" : "");
+  store.set("tip_gemini", rem ? KEYS.gemini : ""); store.set("tip_sarvam", rem ? KEYS.sarvam : ""); store.set("tip_model", KEYS.model);
+}
+
+/* ---------- AI calls (straight from the browser) ---------- */
+async function gemini(contents, system = "", temperature = 0.4, json = false) {
+  if (!KEYS.gemini) throw new Error("Add your Gemini API key in the yellow box first.");
+  if (typeof contents === "string") contents = [{ role: "user", text: contents }];
+  const body = { contents: contents.map(t => ({ role: t.role, parts: [{ text: t.text }] })), generationConfig: { temperature } };
+  if (system) body.systemInstruction = { parts: [{ text: system }] };
+  if (json) body.generationConfig.responseMimeType = "application/json";
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(KEYS.model)}:generateContent`, {
+    method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEYS.gemini }, body: JSON.stringify(body) });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error?.message || "Gemini error " + r.status);
+  return (d.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("");
+}
+async function sarvam(text, source, target, mode) {
+  if (!KEYS.sarvam) throw new Error("Add your Sarvam API key first.");
+  if (text.length > 1000) throw new Error("Mayura accepts up to 1,000 characters.");
+  let r;
+  try {
+    r = await fetch("https://api.sarvam.ai/translate", { method: "POST",
+      headers: { "Content-Type": "application/json", "api-subscription-key": KEYS.sarvam },
+      body: JSON.stringify({ input: text, source_language_code: source, target_language_code: target, mode, model: "mayura:v1" }) });
+  } catch { throw new Error("The browser could not reach Sarvam (it may block calls from web pages). Use the Streamlit version of this app for Sarvam."); }
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error("Sarvam error " + r.status + ": " + (d.error?.message || JSON.stringify(d).slice(0, 200)));
+  return d.translated_text || "";
+}
+
+/* ---------- Slop rule checks (same as utils/slop.py) ---------- */
+const MAL_DIGITS = { "൦": "0", "൧": "1", "൨": "2", "൩": "3", "൪": "4", "൫": "5", "൬": "6", "൭": "7", "൮": "8", "൯": "9" };
+const FILLER = ["delve", "it is important to note", "in today's world", "tapestry", "navigate the", "a testament to",
+  "plays a crucial role", "in conclusion", "furthermore", "seamless", "embark on", "unlock the", "vibrant", "rich cultural heritage"];
+const sentences = t => t.trim().split(/(?<=[.!?।])\s+|\n+/).map(s => s.trim()).filter(Boolean);
+const scriptOf = t => { const m = (t.match(/[ഀ-ൿ]/g) || []).length, l = (t.match(/[A-Za-z]/g) || []).length; return !m && !l ? "unknown" : m >= l ? "Malayalam" : "English"; };
+const nums = t => new Set((t.replace(/[൦-൯]/g, c => MAL_DIGITS[c]).match(/\d+(?:[.,:\/-]\d+)*/g) || []));
+function slopChecks(src, tgt) {
+  const f = [], ss = sentences(src), ts = sentences(tgt), sS = scriptOf(src), tS = scriptOf(tgt);
+  if (sS === tS && sS !== "unknown") f.push({ check: "Script", severity: "critical", result: `Source and target are both ${sS}.`, evidence: "Was the text actually translated?" });
+  const ns = nums(src), nt = nums(tgt), miss = [...ns].filter(x => !nt.has(x)), extra = [...nt].filter(x => !ns.has(x));
+  if (miss.length) f.push({ check: "Numbers dropped", severity: "major", result: "Numbers in the source are missing in the target.", evidence: miss.join(", ") });
+  if (extra.length) f.push({ check: "Numbers added", severity: "major", result: "Numbers appear in the target that are not in the source.", evidence: extra.join(", ") });
+  if (ss.length && ts.length) { const r = ts.length / ss.length;
+    if (r < 0.7) f.push({ check: "Possible omission", severity: "major", result: `Source has ${ss.length} sentences, target has ${ts.length}.`, evidence: "Compare the two side by side." });
+    else if (r > 1.4) f.push({ check: "Possible addition", severity: "minor", result: `Source has ${ss.length} sentences, target has ${ts.length}.`, evidence: "Look for explanations the source did not have." }); }
+  if (src.trim() && tgt.trim()) { const lr = tgt.length / src.length;
+    if (lr < 0.5 || lr > 2.5) f.push({ check: "Length", severity: "minor", result: `Target is ${lr.toFixed(1)}× the source length.`, evidence: "Check for dropped or padded content." }); }
+  if (tS === "Malayalam") { const left = [...new Set((tgt.match(/\b[A-Za-z][A-Za-z'\-]+\b/g) || []).filter(w => w.length > 3))].sort();
+    if (left.length) f.push({ check: "English left in target", severity: "minor", result: `${left.length} English word(s) remain.`, evidence: left.slice(0, 15).join(", ") + " — names and brand terms may be fine." }); }
+  const eng = (tS === "English" ? tgt : src).toLowerCase(), hits = FILLER.filter(p => eng.includes(p));
+  if (hits.length) f.push({ check: "Stock AI phrasing", severity: "minor", result: "Phrases common in AI-generated English.", evidence: hits.join(", ") });
+  if (!f.length) f.push({ check: "Rule checks", severity: "none", result: "No rule-based flags. This does NOT mean the translation is good.", evidence: "Run the AI review and read it yourself." });
+  return f;
+}
+const REVIEW_SYSTEM = `You are a strict English–Malayalam translation reviewer using MQM.
+Compare SOURCE and TARGET. Return JSON only, with this shape:
+{"back_translation": str, "issues": [{"sentence": int, "category": "omission|addition|meaning change|calque|register|terminology|name/number|fluency", "severity": "minor|major|critical", "evidence": str, "suggestion": str}], "verdict": "publish|revise|retranslate", "reason": str}
+Quote evidence from the texts for every issue. If unsure about a Malayalam usage, say so in evidence. Never invent issues; an empty list is allowed.`;
+
+/* ---------- Pages ---------- */
+const view = {};
+view.home = () => `
+  <h2>Welcome</h2>
+  <p>In this course you <strong>translate, build and ship</strong>: good translation prompts first, then apps with Google AI Studio,
+  then India-built engines (Bhashini, Sarvam AI, AI4Bharat), then catching AI translation slop, and finally a deployed capstone tool for a real user.</p>
+  <div class="card"><strong>Promptotyping</strong> = write a brief → let AI build it → test it on real Malayalam → find the failure → explain it with translation theory → improve the brief.</div>
+  <h3>The ladder you climb</h3>
+  <div class="grid">${Object.values(S.phases).map(p => `<div class="card"><span class="pill">Phase ${p.id}</span><h3>${esc(p.name)}</h3><div class="muted">Weeks ${esc(p.weeks)}</div><p>${esc(p.summary)}</p>${p.gate ? `<div>🏁 <em>${esc(p.gate)}</em></div>` : ""}</div>`).join("")}</div>
+  <div class="grid2">
+    <div class="card"><h3>👩‍🎓 Students: start here</h3><ol><li>Open <a href="#week/1">Weekly Lessons</a> and pick this week.</li><li>Choose your level: 🌱 Starter, 🛠️ Builder or 🚀 Pro.</li><li>Copy prompts from the <a href="#prompts">Prompt Bank</a>.</li><li>Stuck? Ask the <a href="#twin">Professor Twin</a> first.</li><li>Check translations with the <a href="#slop">Slop Detector</a>.</li><li>Learn to publish in the <a href="#deploy">Deploy Guide</a>.</li></ol></div>
+    <div class="card"><h3>👨‍🏫 Teachers: the daily 15-minute demo</h3><table><tr><th>Min</th><th>Beat</th><th></th></tr><tr><td>0–2</td><td>Hook</td><td>Show one real mistranslation</td></tr><tr><td>2–10</td><td>Live build</td><td>Type the day's prompt, think aloud</td></tr><tr><td>10–13</td><td>Break it</td><td>Feed it a hard case</td></tr><tr><td>13–15</td><td>Challenge</td><td>Put up the three-level task</td></tr></table><p class="muted">Use Projector mode in Weekly Lessons. Edit the files in <code>content/</code> on GitHub to change the course.</p></div>
+  </div>`;
+
+view.roadmap = () => {
+  const rows = S.weeks.map(w => ({ Week: w.week, Phase: S.phases[w.phase].name, Title: w.title, "Portfolio app": w.app, "Deploy skill": w.deploy }));
+  setTimeout(() => $("#dlRoad").onclick = () => download("translation_in_praxis_roadmap.csv", toCSV(rows)));
+  return `<h2>Roadmap</h2>
+  ${Object.values(S.phases).map(p => `<div class="card"><div class="row" style="justify-content:space-between"><div><span class="pill">Phase ${p.id} · Weeks ${esc(p.weeks)}</span><h3>${esc(p.name)}</h3><p>${esc(p.summary)}</p>
+   <div class="muted">${S.weeks.filter(w => w.phase === p.id).map(w => `<a href="#week/${w.week}">W${w.week}</a>: ${esc(w.app)}`).join(" · ")}</div></div>${p.gate ? `<div>🏁 <strong>${esc(p.gate)}</strong></div>` : ""}</div></div>`).join("")}
+  <div class="card">Support fades: <strong>I do</strong> (Weeks 1–4) → <strong>we do</strong> (5–7) → <strong>you do with the Twin</strong> (8–12) → <strong>you do alone</strong> (13–15).</div>
+  <h3>All weeks</h3>${table(rows)}<button class="secondary" id="dlRoad">Download as CSV</button>`;
+};
+
+view.week = (arg) => {
+  const n = Math.min(Math.max(parseInt(arg || "1", 10) || 1, 1), S.weeks.length);
+  const w = S.weeks.find(x => x.week === n), p = S.phases[w.phase], d = w.demo;
+  const lvl = sessionStorageGet("tip_level") || "starter";
+  setTimeout(() => {
+    document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { sessionStorageSet("tip_level", b.dataset.k); route(); });
+    $("#proj").onchange = e => { document.body.classList.toggle("projector", e.target.checked); };
+    $("#wsel").onchange = e => location.hash = "week/" + e.target.value;
+  });
+  const evidence = { starter: "Support: template, worked example, the Twin. Evidence: screenshot + prompt + 3-line reflection.",
+    builder: "Support: brief template, the Twin. Evidence: app link + brief + test log of 5 hard cases.",
+    pro: "Support: problem statement only. Evidence: repo or deployed link + test log + short write-up." };
+  return `<div class="row" style="justify-content:space-between"><div class="row"><label style="margin:0">Week</label>
+    <select id="wsel" style="width:auto">${S.weeks.map(x => `<option value="${x.week}" ${x.week === n ? "selected" : ""}>Week ${x.week}: ${esc(x.title)}</option>`).join("")}</select></div>
+    <label style="margin:0;font-weight:400"><input type="checkbox" id="proj" ${document.body.classList.contains("projector") ? "checked" : ""}> Projector mode</label></div>
+  <div class="lesson">
+  <h2>Week ${w.week} · ${esc(w.title)}</h2><div class="muted">Phase ${p.id}: ${esc(p.name)} · Portfolio app: ${esc(w.app)}</div>
+  <h3>📖 Theory</h3><p>${esc(w.theory)}</p>
+  <h3>⏱️ 15-minute demo</h3>
+  <div class="grid"><div class="card"><strong>0–2 · Hook</strong><p>${esc(d.hook)}</p></div><div class="card"><strong>2–10 · Live build</strong><p>${esc(d.live_build)}</p></div>
+  <div class="card"><strong>10–13 · Break it</strong><p>${esc(d.break_it)}</p></div><div class="card"><strong>13–15 · Challenge</strong><p>Pick your level below and start.</p></div></div>
+  <h3>🎯 Your task this week</h3>
+  <div class="tabs">${Object.entries(LEVELS).map(([k, v]) => `<button data-k="${k}" class="${k === lvl ? "on" : ""}">${v}</button>`).join("")}</div>
+  <div class="card"><p style="font-size:1.1em"><strong>${esc(w.levels[lvl])}</strong></p><div class="muted">${evidence[lvl]}</div></div>
+  ${w.prompts?.length ? `<h3>🧾 Prompts for this week</h3>${w.prompts.map(id => S.prompts[id]).filter(Boolean).map(pr => `<details class="card"><summary>${esc(pr.id)} · ${esc(pr.title)} <span class="muted">(${pr.where === "chat" ? "AI Studio chat" : "AI Studio Build mode"})</span></summary><div class="muted">Concept: ${esc(pr.concept)}</div>${codeBlock(pr.text)}</details>`).join("")}` : ""}
+  <div class="grid"><div class="card"><strong>🚀 Deploy skill</strong><p>${esc(w.deploy)}</p></div><div class="card"><strong>🤖 Ask the Twin</strong><p>${esc(w.twin_tip)}</p></div><div class="card"><strong>🏛️ DH link</strong><p>${esc(w.dh_link)}</p></div></div>
+  </div>
+  <div class="row" style="justify-content:space-between">${n > 1 ? `<a href="#week/${n - 1}">← Week ${n - 1}</a>` : "<span></span>"}${n < S.weeks.length ? `<a href="#week/${n + 1}">Week ${n + 1} →</a>` : ""}</div>`;
+};
+function sessionStorageGet(k) { try { return sessionStorage.getItem(k); } catch { return null; } }
+function sessionStorageSet(k, v) { try { sessionStorage.setItem(k, v); } catch {} }
+
+view.prompts = () => {
+  const chatIds = Object.keys(S.prompts).filter(k => S.prompts[k].where === "chat");
+  setTimeout(() => {
+    const sel = $("#labSel"), ta = $("#labText");
+    sel.onchange = () => ta.value = S.prompts[sel.value].text;
+    $("#temp").oninput = e => $("#tempV").textContent = e.target.value;
+    $("#labRun").onclick = async e => {
+      if (ta.value.includes("[PASTE")) { $("#labOut").innerHTML = `<p class="error">Replace the [PASTE] placeholder with your text first.</p>`; return; }
+      e.target.disabled = true; $("#labOut").textContent = "Translating…";
+      try { $("#labOut").innerHTML = md(await gemini(ta.value, "", parseFloat($("#temp").value))); }
+      catch (err) { $("#labOut").innerHTML = `<p class="error">${esc(err.message)}</p>`; }
+      e.target.disabled = false;
+    };
+  });
+  return `<h2>Prompt Bank</h2><p class="muted">Copy a prompt into Google AI Studio, or try chat prompts in the Prompt Lab below.</p>
+  ${Object.values(S.prompts).map(pr => `<details class="card"><summary>${esc(pr.id)} · ${esc(pr.title)} <span class="muted">(${pr.where === "chat" ? "chat" : "Build mode"})</span></summary><div class="muted">Concept: ${esc(pr.concept)}</div>${codeBlock(pr.text)}</details>`).join("")}
+  <h3>🧪 Prompt Lab</h3>${keyPanel()}
+  <label>Start from</label><select id="labSel">${chatIds.map(k => `<option value="${k}">${k} · ${esc(S.prompts[k].title)}</option>`).join("")}</select>
+  <label>Your prompt (fill in the brackets)</label><textarea id="labText" style="min-height:220px">${esc(S.prompts[chatIds[0]].text)}</textarea>
+  <label>Temperature: <span id="tempV">0.4</span> <span class="muted">(low = consistent, high = varied)</span></label><input type="range" id="temp" min="0" max="1.5" step="0.1" value="0.4" style="width:100%">
+  <p><button id="labRun">Run with Gemini</button></p><div id="labOut" class="card"></div>`;
+};
+
+view.twin = () => {
+  setTimeout(() => {
+    const send = async () => {
+      const q = $("#twinQ").value.trim(); if (!q) return;
+      $("#twinQ").value = ""; S.twinHistory.push({ role: "user", text: q }); drawChat();
+      const ctx = `Student context: level = ${$("#twinLevel").value}; ${$("#twinWeek").value}.`;
+      $("#twinSend").disabled = true;
+      try { S.twinHistory.push({ role: "model", text: await gemini(S.twinHistory, S.md["twin_prompt.md"] + "\n\n" + ctx, 0.5) }); }
+      catch (err) { S.twinHistory.push({ role: "model", text: "⚠️ " + err.message }); }
+      $("#twinSend").disabled = false; drawChat();
+    };
+    $("#twinSend").onclick = send;
+    $("#twinQ").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } };
+    $("#twinNew").onclick = () => { S.twinHistory = []; drawChat(); };
+    $("#twinDl").onclick = () => download("twin_conversation.txt", S.twinHistory.map(t => (t.role === "user" ? "STUDENT: " : "TWIN: ") + t.text).join("\n\n"), "text/plain");
+    drawChat();
+  });
+  return `<h2>Professor Twin</h2><p class="muted">Your self-help tutor. It gives hints, not answers, and links every fix to translation theory. Write in English or Malayalam.</p>
+  ${keyPanel()}
+  <div class="grid2"><div><label>Your level this week</label><select id="twinLevel">${Object.values(LEVELS).map(v => `<option>${v.split(" ")[1]}</option>`).join("")}</select></div>
+  <div><label>Week</label><select id="twinWeek">${S.weeks.map(w => `<option>Week ${w.week}: ${esc(w.title)}</option>`).join("")}</select></div></div>
+  <div class="chat" id="chat"></div>
+  <textarea id="twinQ" placeholder="e.g. My prompt gives a very formal Malayalam translation for a WhatsApp message. What should I change?" style="min-height:80px"></textarea>
+  <div class="row" style="margin-top:8px"><button id="twinSend">Ask the Twin</button><button class="secondary" id="twinNew">New conversation</button><button class="secondary" id="twinDl">Download for weekly log</button></div>
+  <p class="muted">The Twin can be wrong, especially about Malayalam usage. Check with a dictionary, a classmate or your teacher.</p>`;
+};
+function drawChat() {
+  const c = $("#chat"); if (!c) return;
+  c.innerHTML = S.twinHistory.length ? S.twinHistory.map(t => `<div class="msg ${t.role}">${t.role === "model" ? "🎓 " : ""}${md(t.text)}</div>`).join("")
+    : `<div class="card muted">Ask your first question below.</div>`;
+}
+
+view.slop = () => {
+  const SRC = "The college will remain closed on 15 August 2026 for Independence Day. Classes will not be held. Students must submit their assignments by 20 August.";
+  const TGT = "സ്വാതന്ത്ര്യദിനം പ്രമാണിച്ച് 2026 ഓഗസ്റ്റ് 15-ന് കോളേജ് അടച്ചിരിക്കും. ക്ലാസുകൾ നടക്കും.";
+  setTimeout(() => {
+    $("#sample").onclick = () => { $("#src").value = SRC; $("#tgt").value = TGT; };
+    $("#check").onclick = () => {
+      const s = $("#src").value, t = $("#tgt").value; if (!s.trim() || !t.trim()) return;
+      const flags = slopChecks(s, t), ss = sentences(s), ts = sentences(t), n = Math.max(ss.length, ts.length);
+      $("#rules").innerHTML = `<h3>1 · Rule checks (no AI)</h3><table><tr><th>Check</th><th>Severity</th><th>Result</th><th>Evidence</th></tr>${flags.map(f => `<tr><td>${esc(f.check)}</td><td class="sev-${f.severity}">${esc(f.severity)}</td><td>${esc(f.result)}</td><td>${esc(f.evidence)}</td></tr>`).join("")}</table>
+        <h3>2 · Side by side</h3>${table(Array.from({ length: n }, (_, i) => ({ "#": i + 1, Source: ss[i] || "", Translation: ts[i] || "" })))}
+        <h3>3 · AI review with back-translation (MQM)</h3>${keyPanel()}<button id="aiRev">Run AI review</button><div id="aiOut"></div>
+        <p class="muted">🧑‍⚖️ Human gate: accept or reject each flag and write one line on why. That reflection is what gets graded.</p>`;
+      $("#aiRev").onclick = async e => {
+        e.target.disabled = true; $("#aiOut").textContent = "Back-translating and reviewing…";
+        try {
+          const raw = await gemini(`SOURCE:\n${s}\n\nTARGET:\n${t}`, REVIEW_SYSTEM, 0.1, true);
+          const d = JSON.parse(raw), icon = { publish: "🟢", revise: "🟠", retranslate: "🔴" }[d.verdict] || "⚪";
+          const issues = d.issues || [];
+          $("#aiOut").innerHTML = `<div class="card"><h3>${icon} Suggested verdict: ${esc(d.verdict)}</h3><p>${esc(d.reason)}</p><strong>Back-translation</strong><p>${esc(d.back_translation)}</p></div>
+            ${issues.length ? table(issues) + `<button class="secondary" id="dlRep">Download report (CSV)</button>` : `<p>No issues listed. Read it yourself anyway.</p>`}`;
+          if (issues.length) $("#dlRep").onclick = () => download("slop_report.csv", toCSV(issues));
+        } catch (err) { $("#aiOut").innerHTML = `<p class="error">${esc(err.message)}</p>`; }
+        e.target.disabled = false;
+      };
+    };
+  });
+  return `<h2>Translation Slop Detector</h2>
+  <details class="card"><summary>What is translation slop?</summary><p><strong>Translation slop</strong> = fluent-looking output a careful human translator would not sign: meaning drift, invented content, dropped content, flattened culture, wrong register, or English thinking in Malayalam words.</p>
+  <p>AI-authorship detectors guess <em>who</em> wrote a text and are weak on short texts and on Malayalam. This tool asks a better question: <strong>is this translation faithful and fit for its reader?</strong> Rule checks need no key; the AI review needs a Gemini key.</p></details>
+  <p><button class="secondary" id="sample">Load a sample with planted errors</button></p>
+  <div class="grid2"><div><label>Source text</label><textarea id="src"></textarea></div><div><label>Translation</label><textarea id="tgt"></textarea></div></div>
+  <p><button id="check">Check</button></p><div id="rules"></div>`;
+};
+
+view.compare = () => {
+  const LANG = { English: "en-IN", Malayalam: "ml-IN", Hindi: "hi-IN", Tamil: "ta-IN" };
+  setTimeout(() => {
+    $("#cmpRun").onclick = async e => {
+      const text = $("#cmpText").value.trim(); if (!text) return;
+      const from = $("#from").value, to = $("#to").value, reg = $("#reg").value, mode = $("#mode").value;
+      e.target.disabled = true; $("#cmpOut").innerHTML = "<p>Translating…</p>";
+      const [g, s] = await Promise.all([
+        gemini(`Translate from ${from} to ${to}. Register: ${reg}. Return only the translation.\n\nText:\n${text}`, "", 0.2).catch(err => "⚠️ " + err.message),
+        sarvam(text, LANG[from], LANG[to], mode).catch(err => "⚠️ " + err.message)]);
+      S.last = { source: text, register: reg, mode, Gemini: g.trim(), Sarvam: s };
+      e.target.disabled = false;
+      $("#cmpOut").innerHTML = `<div class="grid2"><div class="card"><strong>Gemini</strong> · ${esc(reg)}<p>${esc(S.last.Gemini)}</p></div><div class="card"><strong>Sarvam Mayura</strong> · ${esc(mode)}<p>${esc(s)}</p></div></div>
+        <h3>Your vote</h3><div class="grid2"><div><label>Better translation</label><select id="win"><option>Gemini</option><option>Sarvam</option><option>Tie</option></select></div>
+        <div><label>Errors in the losing one (comma separated)</label><input type="text" id="errs" placeholder="meaning, grammar, word choice, style, register"></div></div>
+        <label>One-line reason (link it to theory)</label><input type="text" id="why"><p><button id="saveVote">Save vote</button></p>`;
+      $("#saveVote").onclick = () => { S.votes.push({ ...S.last, winner: $("#win").value, errors: $("#errs").value, reason: $("#why").value }); drawVotes(); };
+    };
+    drawVotes();
+  });
+  const opts = sel => Object.keys(LANG).map(l => `<option ${l === sel ? "selected" : ""}>${l}</option>`).join("");
+  return `<h2>Engine Comparator</h2><p class="muted">Engine choice is a translation decision. Same text, two engines, your vote.</p>
+  ${keyPanel(true)}
+  <div class="grid2"><div><label>From</label><select id="from">${opts("English")}</select></div><div><label>To</label><select id="to">${opts("Malayalam")}</select></div>
+  <div><label>Gemini register</label><select id="reg"><option>formal</option><option>everyday spoken</option><option>literary</option><option>code-mixed (Manglish)</option></select></div>
+  <div><label>Sarvam mode</label><select id="mode"><option>formal</option><option>modern-colloquial</option><option>classic-colloquial</option><option>code-mixed</option></select></div></div>
+  <label>Text (max 1,000 characters)</label><textarea id="cmpText" maxlength="1000"></textarea>
+  <p><button id="cmpRun">Translate with both</button></p><div id="cmpOut"></div><div id="votes"></div>`;
+};
+function drawVotes() {
+  const v = $("#votes"); if (!v || !S.votes.length) return;
+  v.innerHTML = `<h3>Saved votes (this tab only)</h3>${table(S.votes)}<button class="secondary" id="dlVotes">Download votes (CSV)</button>`;
+  $("#dlVotes").onclick = () => download("engine_votes.csv", toCSV(S.votes));
+}
+
+view.deploy = () => `<h2>Deploy Guide</h2>${md(S.md["deploy_guide.md"])}`;
+view.capstone = () => `<h2>Capstone</h2>${md(S.md["capstone.md"])}`;
+view.resources = () => `<h2>Resources</h2>${md(S.md["resources.md"])}`;
+
+/* ---------- Router ---------- */
+function route() {
+  const [page, arg] = (location.hash.slice(1) || "home").split("/");
+  const key = view[page] ? page : "home";
+  $("#nav").innerHTML = PAGES.map(([k, label]) => `<a href="#${k === "week" ? "week/1" : k}" class="${k === key ? "active" : ""}">${label}</a>`).join("");
+  $("#app").innerHTML = view[key](arg);
+  if (!location.hash.startsWith("#week")) window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+load().then(route).catch(err => {
+  $("#app").innerHTML = `<h2>Could not load the course</h2><p class="error">${esc(err.message)}</p>
+  <p>Check that the <code>content/</code> folder is in the repository next to <code>index.html</code>, and that a file named <code>.nojekyll</code> exists at the top level.
+  If you opened this file directly from your computer, run it through a web server or GitHub Pages instead.</p>`;
+});
+</script>
+</body>
+</html>

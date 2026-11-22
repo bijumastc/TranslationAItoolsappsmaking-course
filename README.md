@@ -61,7 +61,34 @@ Without keys, every page opens. The AI features ask for a key in the sidebar.
    Or use GitHub Desktop, or drag the files into the repository page with **Add file → Upload files**.
 3. Check that `.streamlit/secrets.toml` is **not** in the repository. The `.gitignore` keeps it out.
 
-## Deploy on Streamlit Community Cloud (free)
+## Option B: a free live website on GitHub Pages (no Streamlit needed)
+
+The repository also contains `index.html`, a version of the course that runs entirely in the browser.
+It reads the same `content/` files, so editing them updates both versions.
+
+1. In your repository, open **Settings → Pages**.
+2. Under **Build and deployment → Source**, keep **Deploy from a branch**.
+3. Under **Branch**, choose **main** and folder **/ (root)**, then click **Save**.
+4. Wait 1–2 minutes and refresh. Your address appears at the top:
+   `https://<your-username>.github.io/translation-in-praxis/`
+
+Check that the empty file **`.nojekyll`** is at the top of the repository. Without it, GitHub turns the
+`.md` files into web pages and the site cannot load the course. If it is missing: **Add file → Create new file**,
+name it `.nojekyll`, leave it empty, **Commit changes**.
+
+On the Pages version, the Professor Twin, Prompt Lab, Slop Detector AI review and Engine Comparator use **each
+student's own Gemini key**, typed into the page. The key stays in their browser and goes only to Google. Sarvam may
+block calls made directly from a web page; if so, use the Streamlit version for Sarvam.
+
+| | GitHub Pages (`index.html`) | Streamlit (`Home.py`) |
+| --- | --- | --- |
+| Address | `username.github.io/translation-in-praxis` | `your-app.streamlit.app` |
+| Setup | 3 clicks in Settings → Pages | Account on share.streamlit.io |
+| AI key | Each student's own key | Teacher's key in Secrets, or students' own |
+| Sarvam comparator | May be blocked by the browser | Works |
+| Sleeps when unused | Never | After a few days without visitors (wakes on click) |
+
+## Option A: Deploy on Streamlit Community Cloud (free)
 
 1. Go to **share.streamlit.io** and sign in with GitHub.
 2. Click **Create app → Deploy a public app from GitHub**.
